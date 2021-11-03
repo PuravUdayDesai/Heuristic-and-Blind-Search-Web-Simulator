@@ -10,7 +10,7 @@ function breadthFirstSearch(initialState, goalTest, actions, successor) {
     let fringe = new Queue();
 
     // initialState and the goal is the same
-    if (utils.goalTest(initialState, goal)) {
+    if (goalTest(initialState, goal)) {
         return [initialState];
     }
 
@@ -19,7 +19,7 @@ function breadthFirstSearch(initialState, goalTest, actions, successor) {
     let expanded = [];
 
     while (!fringe.isEmpty()) {
-        // Pop an element out of the queue to expand.
+        // Dequeue an element out of the queue to expand.
         let parent = fringe.dequeue();
         let newChildStates = [];
 
@@ -29,29 +29,26 @@ function breadthFirstSearch(initialState, goalTest, actions, successor) {
         // Add the node to the expanded list to prevent re-expansion.
         expanded.push(parent.state);
 
-        // Create successors of each node and push them onto the fringe.
+        // Create successors of each node and enqueue them onto the fringe.
         for (let i = 0; i < actionsList.length; i++) {
-            let newS = utils.successor(parent.state, actionsList[i]);
+            let newS = successor(parent.state, actionsList[i]);
             let newN = new searchNode(actionsList[i], newS, parent);
 
-            // If the goal is found,
-            // returns the path to the goal.
-            if (utils.goalTest(newS, goal)) {
+            // If the goal is found, returns the path to the goal.
+            if (goalTest(newS, goal)) {
                 console.log(`Found ${newS}!`);
                 return `${newN.path()} with path cost ${newN.pathCost()}.`;
             }
 
-            // If the successor is already expanded,
-            // don't add it to the fringe.
+            // If the successor is already expanded, don't add it to the fringe.
             else if (expanded.indexOf(newS) !== -1)
                 continue;
 
-            // If the successor is already in the fringe,
-            // don't add it to the fringe again.
+            // If the successor is already in the fringe, don't add it to the fringe again.
             else if (!fringe.contains(newN))
                 continue;
 
-            // Push new successors to the fringe.
+            // Enqueue new successors to the fringe.
             else {
                 newChildStates.push(newS);
                 fringe.enqueue(newN);
